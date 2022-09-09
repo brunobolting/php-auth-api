@@ -6,7 +6,7 @@ namespace Domain\Entities;
 
 use DateTimeImmutable;
 use DateTimeInterface;
-use Domain\Entities\Validator;
+use Domain\Entities\Error;
 use DomainException;
 
 /**
@@ -15,7 +15,7 @@ use DomainException;
 final class User
 {
     /**
-     * @var integer|null
+     * @var int|null
      */
     public ?int $ID;
 
@@ -35,19 +35,24 @@ final class User
     public string $password;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     public DateTimeInterface $createdOn;
 
     /**
-     * @var \DateTimeInterface
+     * @var DateTimeInterface
      */
     public DateTimeInterface $updatedOn;
 
     /**
+     * @var \Domain\Entities\Error|null
+     */
+    public ?Error $error;
+
+    /**
      * User construct
      *
-     * @param integer|null $ID
+     * @param int|null $ID
      * @param string $email
      * @param string $nickname
      * @param string $password
@@ -61,34 +66,51 @@ final class User
         $this->createdOn = new DateTimeImmutable();
         $this->updatedOn = new DateTimeImmutable();
 
-        $validation = $this->validate();
-        if ($validation->hasErrors()) {
-            throw new DomainException($validation->getErrorsAsString());
-        }
+        $this->error = $this->validate();
+
+        $this->password = $this->hashPassword($password);
     }
 
     /**
      * Validate User Entity
      *
-     * @return \Domain\Entities\Validator
+     * @return Error|null
      */
-    private function validate(): Validator
+    private function validate(): ?Error
     {
-        $errors = new Validator();
+        $errors = new Error();
 
         if (!\filter_var($this->email, \FILTER_VALIDATE_EMAIL)) {
-            $errors->addError("invalid email");
+            $errors->addError("invalid_email", "invalid email", 1);
         }
 
         if (\strlen(\trim($this->nickname)) === 0) {
-            $errors->addError("invalid nickname, cannot be blank");
+            $errors->addError("invalid_nickname", "invalid nickname, cannot be blank", 2);
         }
 
         if (\strlen(\trim($this->password)) < 6) {
-            $errors->addError("invalid password, should be greater than 6 characters");
+            $errors->addError(
+                "invalid_password",
+                "invalid password, should be greater than 6 characters",
+                3
+            );
         }
 
+        if (!$errors->hasErrors()) {
+            return null;
+        }
 
         return $errors;
+    }
+
+    /**
+     * Hash User password
+     *
+     * @param string $password
+     * @return string
+     */
+    private function hashPassword(string $password): string
+    {
+        return password_hash($password, PASSWORD_ARGON2I);
     }
 }

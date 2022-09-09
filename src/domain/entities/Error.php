@@ -7,7 +7,7 @@ namespace Domain\Entities;
 /**
  * Class Error
  */
-final class Validator
+final class Error
 {
     /**
      * @var array
@@ -27,19 +27,20 @@ final class Validator
     /**
      * Add new Error Message
      *
+     * @param string $handle
      * @param string $message
-     *
+     * @param int|null $code
      * @return void
      */
-    public function addError(string $message): void
+    public function addError(string $handle, string $message, ?int $code = null): void
     {
-        $this->errors[] = $message;
+        $this->errors[] = ['handle' => $handle, 'message' => $message, 'code' => $code];
     }
 
     /**
      * Verify if has errors
      *
-     * @return boolean
+     * @return bool
      */
     public function hasErrors(): bool
     {
