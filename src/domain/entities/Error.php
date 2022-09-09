@@ -7,7 +7,7 @@ namespace Domain\Entities;
 /**
  * Class Error
  */
-final class Error
+abstract class Error
 {
     /**
      * @var array

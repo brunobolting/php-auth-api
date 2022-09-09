@@ -12,7 +12,7 @@ use DomainException;
 /**
  * Class User
  */
-final class User
+final class User extends Error implements Entity
 {
     /**
      * @var int|null
@@ -45,11 +45,6 @@ final class User
     public DateTimeInterface $updatedOn;
 
     /**
-     * @var \Domain\Entities\Error|null
-     */
-    public ?Error $error;
-
-    /**
      * User construct
      *
      * @param int|null $ID
@@ -66,7 +61,7 @@ final class User
         $this->createdOn = new DateTimeImmutable();
         $this->updatedOn = new DateTimeImmutable();
 
-        $this->error = $this->validate();
+        $this->validate();
 
         $this->password = $this->hashPassword($password);
     }
@@ -74,33 +69,25 @@ final class User
     /**
      * Validate User Entity
      *
-     * @return Error|null
+     * @return void
      */
-    private function validate(): ?Error
+    public function validate(): void
     {
-        $errors = new Error();
-
         if (!\filter_var($this->email, \FILTER_VALIDATE_EMAIL)) {
-            $errors->addError("invalid_email", "invalid email", 1);
+            $this->addError("invalid_email", "invalid email", 1);
         }
 
         if (\strlen(\trim($this->nickname)) === 0) {
-            $errors->addError("invalid_nickname", "invalid nickname, cannot be blank", 2);
+            $this->addError("invalid_nickname", "invalid nickname, cannot be blank", 2);
         }
 
         if (\strlen(\trim($this->password)) < 6) {
-            $errors->addError(
+            $this->addError(
                 "invalid_password",
                 "invalid password, should be greater than 6 characters",
                 3
             );
         }
-
-        if (!$errors->hasErrors()) {
-            return null;
-        }
-
-        return $errors;
     }
 
     /**
