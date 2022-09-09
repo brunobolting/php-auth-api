@@ -10,24 +10,23 @@ use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
 {
-    public function testShouldBeThrowExceptionIfEmailIsInvalid(): void
+    public function testShouldBeHasErrorIfEmailIsInvalid(): void
     {
         $user = new User(null, 'invalid_email.com', 'nickname123', 'secure_password');
-
-        $this->assertInstanceOf(Error::class, $user->error);
-        if ($user->error !== null) {
-            $handles = array_column($user->error->getErrors(), 'handle');
+        $this->assertTrue($user->hasErrors());
+        if ($user->hasErrors()) {
+            $handles = array_column($user->getErrors(), 'handle');
             $this->assertContainsEquals('invalid_email', $handles);
         }
     }
 
-    public function testShouldBeThrowExceptionIfNicknameIsBlank(): void
+    public function testShouldBeHasErrorIfNicknameIsBlank(): void
     {
         $user = new User(null, 'test@email.com', '', 'secure_password');
 
-        $this->assertInstanceOf(Error::class, $user->error);
-        if ($user->error !== null) {
-            $handles = array_column($user->error->getErrors(), 'handle');
+        $this->assertTrue($user->hasErrors());
+        if ($user->hasErrors()) {
+            $handles = array_column($user->getErrors(), 'handle');
             $this->assertContains('invalid_nickname', $handles);
         }
     }
@@ -36,22 +35,22 @@ final class UserTest extends TestCase
     {
         $user = new User(null, 'test@email.com', 'nickname123', '12345');
 
-        $this->assertInstanceOf(Error::class, $user->error);
-        if ($user->error !== null) {
-            $handles = array_column($user->error->getErrors(), 'handle');
+        $this->assertTrue($user->hasErrors());
+        if ($user->hasErrors()) {
+            $handles = array_column($user->getErrors(), 'handle');
             $this->assertContains('invalid_password', $handles);
         }
 
         $user2 = new User(null, 'test@email.com', 'nickname123', '123456');
 
-        $this->assertNull($user2->error);
+        $this->assertFalse($user2->hasErrors());
     }
 
     public function testPasswordShouldBeEncrypted(): void
     {
         $user = new User(null, 'test@email.com', 'nickname123', 'secure_password');
 
-        $this->assertNull($user->error);
+        $this->assertFalse($user->hasErrors());
         $this->assertTrue(password_verify('secure_password', $user->password));
     }
 
