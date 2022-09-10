@@ -4,12 +4,19 @@ declare(strict_types=1);
 
 namespace Test\Domain\Entities;
 
-use Domain\Entities\Error;
 use Domain\Entities\User;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 
 final class UserTest extends TestCase
 {
+    public function testIDShouldBeValid(): void
+    {
+        $user = new User(null, 'valid@email.com', 'nickname123', 'secure_password');
+        $this->assertNotNull($user->ID);
+        $this->assertTrue(Uuid::isValid($user->ID));
+    }
+
     public function testShouldBeHasErrorIfEmailIsInvalid(): void
     {
         $user = new User(null, 'invalid_email.com', 'nickname123', 'secure_password');
@@ -57,7 +64,7 @@ final class UserTest extends TestCase
     public function testCreateNewUserShouldBeWork(): void
     {
         $user = new User(null, 'test@email.com', 'nickname123', 'secure_password');
-        $this->assertNull($user->ID);
+        $this->assertNotNull($user->ID);
         $this->assertSame('test@email.com', $user->email);
         $this->assertSame('nickname123', $user->nickname);
         $this->assertTrue(password_verify('secure_password', $user->password));

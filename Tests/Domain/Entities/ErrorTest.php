@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Test\Domain\Entities;
 
-use Domain\Entities\Error;
 use Domain\Entities\User;
 use PHPUnit\Framework\TestCase;
 
