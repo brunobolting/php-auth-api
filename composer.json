@@ -3,10 +3,10 @@
     "autoload": {
         "psr-4": {
             "BrunoBolting\\AuthApi\\": "src/",
-            "Domain\\Entities\\": "src/domain/entities",
-            "Infrastructure\\": "src/infrastructure",
-            "Presentation\\": "src/presentation",
-            "Test\\": "tests"
+            "Domain\\": "src/Domain/",
+            "Infrastructure\\": "src/Infrastructure/",
+            "Presentation\\": "src/Presentation",
+            "Test\\": "Tests"
         }
     },
     "authors": [

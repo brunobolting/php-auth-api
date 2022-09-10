@@ -7,7 +7,7 @@ namespace Domain\Entities;
 /**
  * Class Error
  */
-abstract class Error
+abstract class Error implements ErrorInterface
 {
     /**
      * @var array

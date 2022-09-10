@@ -8,11 +8,11 @@ use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 
 $containerBuilder = new ContainerBuilder();
-$containerBuilder->addDefinitions(__DIR__ . '/infrastructure/dependencies.php');
+$containerBuilder->addDefinitions(__DIR__ . '/Infrastructure/dependencies.php');
 $container = $containerBuilder->build();
 
 $app = Bridge::create($container);
 
-require __DIR__ . '/presentation/api/routes.php';
+require __DIR__ . '/Presentation/Api/routes.php';
 
 $app->run();
