@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Domain\Entities;
 
 use Ramsey\Uuid\Uuid;
@@ -8,6 +10,6 @@ abstract class Entity extends Error implements EntityInterface
 {
     public function newID(): int|string
     {
-        return Uuid::uuid4();
+        return (string) Uuid::uuid4();
     }
 }
