@@ -35,12 +35,12 @@ final class User extends Entity
     /**
      * @var DateTimeInterface
      */
-    public DateTimeInterface $createdOn;
+    public DateTimeInterface $createdAt;
 
     /**
      * @var DateTimeInterface
      */
-    public DateTimeInterface $updatedOn;
+    public DateTimeInterface $updatedAt;
 
     /**
      * User construct
@@ -50,14 +50,20 @@ final class User extends Entity
      * @param string $nickname
      * @param string $password
      */
-    public function __construct(?string $ID, string $email, string $nickname, string $password)
-    {
+    public function __construct(
+        ?string $ID,
+        string $email,
+        string $nickname,
+        string $password,
+        DateTimeInterface $createdAt = new DateTimeImmutable(),
+        DateTimeInterface $updatedAt = new DateTimeImmutable()
+    ) {
         $this->ID = $ID ?? $this->newID();
         $this->email = $email;
         $this->nickname = $nickname;
         $this->password = $password;
-        $this->createdOn = new DateTimeImmutable();
-        $this->updatedOn = new DateTimeImmutable();
+        $this->createdAt = $createdAt;
+        $this->updatedAt = $updatedAt;
 
         $this->validate();
 

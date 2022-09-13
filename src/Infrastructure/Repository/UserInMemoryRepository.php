@@ -33,22 +33,22 @@ final class UserInMemoryRepository implements Repository
         return $entities;
     }
 
-    public function create(EntityInterface $entity): ?EntityInterface
+    public function create(EntityInterface $entity): bool
     {
         $this->inmem[$entity->ID] = $entity;
-        return $this->inmem[$entity->ID];
+        return isset($this->inmem[$entity->ID]);
     }
 
-    public function update(EntityInterface $entity): ?EntityInterface
+    public function update(EntityInterface $entity): bool
     {
         $elem = $this->get($entity->ID);
         if ($elem === null) {
-            return null;
+            return false;
         }
 
         $this->inmem[$elem->ID] = $entity;
 
-        return $this->inmem[$elem->ID];
+        return isset($this->inmem[$entity->ID]);
     }
 
     public function delete(int|string $ID): bool

@@ -37,12 +37,19 @@ class UserManager implements UserManagerInterface
             return $user;
         }
 
-        return $this->repo->create($user);
+        if (!$this->repo->create($user)) {
+            $user->addError('error_create', 'error to create user');
+        }
+
+        return $user;
     }
 
     public function updateUser(EntityInterface $entity): EntityInterface
     {
-        return $this->repo->update($entity);
+        if (!$this->repo->update($entity)) {
+            $entity->addError('error_create', 'error to create user');
+        }
+        return $entity;
     }
 
     public function deleteUser(int|string $ID): bool
