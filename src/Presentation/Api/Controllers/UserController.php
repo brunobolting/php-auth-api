@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Presentation\Api\Controllers;
 
-use Domain\Entities\User;
 use Domain\UseCases\User\UserManagerInterface;
 use Psr\Http\Message\{
     ServerRequestInterface as Request,

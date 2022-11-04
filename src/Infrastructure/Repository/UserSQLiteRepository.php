@@ -30,7 +30,7 @@ final class UserSQLiteRepository implements UserRepositoryInterface
 
         $entity = (object) $entity[0];
 
-        return new User(
+        $user = new User(
             $entity->id,
             $entity->email,
             $entity->nickname,
@@ -38,6 +38,8 @@ final class UserSQLiteRepository implements UserRepositoryInterface
             new \DateTimeImmutable($entity->created_at),
             new \DateTimeImmutable($entity->updated_at)
         );
+        $user->setPasswordHash($entity->password);
+        return $user;
     }
 
     public function find(array $filter = []): array
@@ -63,7 +65,8 @@ final class UserSQLiteRepository implements UserRepositoryInterface
 
         $users = [];
         foreach ($entities as $entity) {
-            $users[] = new User(
+
+            $user = new User(
                 $entity->id,
                 $entity->email,
                 $entity->nickname,
@@ -71,6 +74,8 @@ final class UserSQLiteRepository implements UserRepositoryInterface
                 new \DateTimeImmutable($entity->created_at),
                 new \DateTimeImmutable($entity->updated_at)
             );
+            $user->setPasswordHash($entity->password);
+            $users[] = $user;
         }
 
         return $users;

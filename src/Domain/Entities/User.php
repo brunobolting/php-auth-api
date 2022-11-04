@@ -126,6 +126,14 @@ final class User extends Entity
     }
 
     /**
+     * @param string $password
+     */
+    public function setPasswordHash(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    /**
      * @param DateTimeInterface $updatedAt
      */
     public function setUpdatedAt(DateTimeInterface $updatedAt): void
@@ -242,7 +250,7 @@ final class User extends Entity
             $this->addError(
                 "invalid_password",
                 "invalid password, should be greater than 6 characters",
-                3
+                4
             );
             return false;
         }

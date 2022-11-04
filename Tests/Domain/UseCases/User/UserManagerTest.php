@@ -21,7 +21,7 @@ final class UserManagerTest extends TestCase
         $pdo = new \PDO('sqlite::memory:', null, null, [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
         ]);
-        $rootPath = '../../../..';
+        $rootPath = __DIR__ . '/../../../..';
         $configArray = require("$rootPath/phinx.php");
         $configArray['paths']['migrations'] = "$rootPath/database/migrations";
         $configArray['paths']['seeds'] = "$rootPath/database/seeds";

@@ -14,9 +14,8 @@ final class ErrorTest extends TestCase
         $user = new User(null, 'valid@email.com', 'nickname123', 'secure_password');
 
         $user->addError('error_message', 'error message', 1);
-        $handles = array_column($user->getErrors(), 'handle');
 
-        $this->assertContainsEquals('error_message', $handles);
+        $this->assertArrayHasKey('error_message', $user->getErrors());
     }
 
     public function testGetErrorsAsStringShouldBeWork(): void

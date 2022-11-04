@@ -62,4 +62,14 @@ class UserManager implements UserManagerInterface
     {
         return $this->repo->delete($ID);
     }
+
+    public function authorize(string $email, string $password): bool
+    {
+        $user = $this->findUser(['email' => $email]);
+        if (count($user) === 0) {
+            return false;
+        }
+
+        return password_verify($password, $user[0]->getPassword());
+    }
 }
