@@ -12,7 +12,13 @@
 					"name": "Get User",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "default"
+							}
+						],
 						"url": {
 							"raw": "{{host}}/users/:id",
 							"host": [
@@ -36,7 +42,13 @@
 					"name": "Delete User",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{host}}/users/:id",
 							"host": [
@@ -49,7 +61,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "c6c5cded-6be6-4381-906a-635af8bbdd17"
+									"value": "7c315407-a2e1-4cd3-bcff-7fd216ead92a"
 								}
 							]
 						}
@@ -58,12 +70,21 @@
 				},
 				{
 					"name": "Update User",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"\",\n    \"nickname\": \"\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"nickname\": \"aaaaaaaaa\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -93,10 +114,16 @@
 					"name": "Create User",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"\",\n    \"nickname\": \"\",\n    \"password\": \"123\"\n}",
+							"raw": "{\n    \"email\": \"aaaa@gmail.com\",\n    \"nickname\": \"123456\",\n    \"password\": \"123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -119,7 +146,22 @@
 					"name": "List All Users",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
 					},
 					"response": []
 				}
@@ -162,18 +204,21 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"response should be success\", () => {",
-									"    pm.response.to.have.status(200)",
-									"})",
-									"pm.test(\"response should retrive the token\", () => {",
-									"    pm.response.to.have.jsonBody(\"token\");",
-									"})",
-									"if (pm.response.to.have.status(200)) {",
+									"if (pm.response.code === 200) {",
 									"    let token = pm.response.json().token",
 									"    pm.collectionVariables.set(\"token\", token);",
 									"} else {",
 									"    pm.collectionVariables.set(\"token\", '');",
-									"}"
+									"}",
+									"",
+									"pm.test(\"response should be success\", () => {",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"pm.test(\"response should retrieve the token\", () => {",
+									"    pm.response.to.have.jsonBody(\"token\");",
+									"})",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -248,11 +293,6 @@
 		{
 			"key": "host",
 			"value": "http://localhost:8888",
-			"type": "default"
-		},
-		{
-			"key": "token",
-			"value": "",
 			"type": "default"
 		}
 	]
