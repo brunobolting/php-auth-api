@@ -18,4 +18,6 @@ interface UserManagerInterface
     public function updateUser(EntityInterface $entity): EntityInterface;
 
     public function deleteUser(string $ID): bool;
+
+    public function authorize(string $email, string $password): bool;
 }

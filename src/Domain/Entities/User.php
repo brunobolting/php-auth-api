@@ -18,10 +18,6 @@ final class User extends Entity
     private readonly ?string $ID;
 
     /**
-     * @param string $email
-     */
-
-    /**
      * @var string
      */
     private string $email;
@@ -53,6 +49,8 @@ final class User extends Entity
      * @param string $email
      * @param string $nickname
      * @param string $password
+     * @param DateTimeInterface $createdAt
+     * @param DateTimeInterface $updatedAt
      */
     public function __construct(
         ?string $ID,
@@ -62,9 +60,6 @@ final class User extends Entity
         DateTimeInterface $createdAt = new DateTimeImmutable(),
         DateTimeInterface $updatedAt = new DateTimeImmutable()
     ) {
-        if ($ID !== null) {
-            $this->validateID($ID);
-        }
         $this->validateEmail($email);
         $this->validateNickname($nickname);
         $this->validatePassword($password);
@@ -78,22 +73,9 @@ final class User extends Entity
         $this->password = $this->hashPassword($password);
     }
 
-//    /**
-//     * Validate User EntityInterface
-//     *
-//     * @return void
-//     */
-//    public function validate(): void
-//    {
-//        $this->validateID();
-//
-//        $this->validateEmail();
-//
-//        $this->validateNickname();
-//
-//        $this->validatePassword();
-//    }
-
+    /**
+     * @param string $email
+     */
     public function setEmail(string $email): void
     {
         if (!$this->validateEmail($email)) {
@@ -203,19 +185,7 @@ final class User extends Entity
     }
 
     /**
-     * @return bool
-     */
-    public function validateID(int|string $ID): bool
-    {
-        if ($ID === null) {
-            $this->addError("invalid_id", "invalid id, cannot be blank", 1);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
+     * @param string $email
      * @return bool
      */
     public function validateEmail(string $email): bool
@@ -229,6 +199,7 @@ final class User extends Entity
     }
 
     /**
+     * @param string $nickname
      * @return bool
      */
     public function validateNickname(string $nickname): bool
@@ -242,6 +213,7 @@ final class User extends Entity
     }
 
     /**
+     * @param string $password
      * @return bool
      */
     public function validatePassword(string $password): bool
