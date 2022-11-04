@@ -13,6 +13,10 @@ $container = $containerBuilder->build();
 
 $app = Bridge::create($container);
 
-require __DIR__ . '/Presentation/Api/routes.php';
+$middleware = require_once __DIR__ . '/Presentation/Api/middleware.php';
+$middleware($app);
+
+$routes = require_once __DIR__ . '/Presentation/Api/routes.php';
+$routes($app);
 
 $app->run();

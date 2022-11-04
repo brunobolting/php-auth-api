@@ -34,7 +34,7 @@ abstract class Error implements ErrorInterface
      */
     public function addError(string $handle, string $message, ?int $code = null): void
     {
-        $this->errors[] = ['handle' => $handle, 'message' => $message, 'code' => $code];
+        $this->errors[$handle] = ['message' => $message, 'code' => $code];
     }
 
     /**
@@ -54,6 +54,6 @@ abstract class Error implements ErrorInterface
      */
     public function getErrorsAsString(): string
     {
-        return \json_encode($this->errors);
+        return \json_encode($this->errors, JSON_UNESCAPED_UNICODE);
     }
 }

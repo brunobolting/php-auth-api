@@ -14,7 +14,7 @@ return
             'name' => './database/app',
             'suffix' => '.db',
         ],
-        'testing' => [
+        'test' => [
             'adapter' => 'sqlite',
             'name' => 'app',
             'mode' => 'memory',

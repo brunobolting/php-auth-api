@@ -15,32 +15,36 @@ final class User extends Entity
     /**
      * @var string|null
      */
-    public readonly ?string $ID;
+    private readonly ?string $ID;
+
+    /**
+     * @param string $email
+     */
 
     /**
      * @var string
      */
-    public string $email;
+    private string $email;
 
     /**
      * @var string
      */
-    public string $nickname;
+    private string $nickname;
 
     /**
      * @var string
      */
-    public string $password;
+    private string $password;
 
     /**
      * @var DateTimeInterface
      */
-    public DateTimeInterface $createdAt;
+    private DateTimeInterface $createdAt;
 
     /**
      * @var DateTimeInterface
      */
-    public DateTimeInterface $updatedAt;
+    private DateTimeInterface $updatedAt;
 
     /**
      * User construct
@@ -58,44 +62,75 @@ final class User extends Entity
         DateTimeInterface $createdAt = new DateTimeImmutable(),
         DateTimeInterface $updatedAt = new DateTimeImmutable()
     ) {
+        if ($ID !== null) {
+            $this->validateID($ID);
+        }
+        $this->validateEmail($email);
+        $this->validateNickname($nickname);
+        $this->validatePassword($password);
+
         $this->ID = $ID ?? $this->newID();
         $this->email = $email;
         $this->nickname = $nickname;
         $this->password = $password;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->password = $this->hashPassword($password);
+    }
 
-        $this->validate();
+//    /**
+//     * Validate User EntityInterface
+//     *
+//     * @return void
+//     */
+//    public function validate(): void
+//    {
+//        $this->validateID();
+//
+//        $this->validateEmail();
+//
+//        $this->validateNickname();
+//
+//        $this->validatePassword();
+//    }
+
+    public function setEmail(string $email): void
+    {
+        if (!$this->validateEmail($email)) {
+            return;
+        }
+        $this->email = $email;
+    }
+
+    /**
+     * @param string $nickname
+     */
+    public function setNickname(string $nickname): void
+    {
+        if (!$this->validateNickname($nickname)) {
+            return;
+        }
+        $this->nickname = $nickname;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password): void
+    {
+        if (!$this->validatePassword($password)) {
+            return;
+        }
 
         $this->password = $this->hashPassword($password);
     }
 
     /**
-     * Validate User EntityInterface
-     *
-     * @return void
+     * @param DateTimeInterface $updatedAt
      */
-    public function validate(): void
+    public function setUpdatedAt(DateTimeInterface $updatedAt): void
     {
-        if ($this->ID === null) {
-            $this->addError("invalid_id", "invalid id, cannot be blank", 1);
-        }
-
-        if (!\filter_var($this->email, \FILTER_VALIDATE_EMAIL)) {
-            $this->addError("invalid_email", "invalid email", 2);
-        }
-
-        if (\strlen(\trim($this->nickname)) === 0) {
-            $this->addError("invalid_nickname", "invalid nickname, cannot be blank", 3);
-        }
-
-        if (\strlen(\trim($this->password)) < 6) {
-            $this->addError(
-                "invalid_password",
-                "invalid password, should be greater than 6 characters",
-                3
-            );
-        }
+        $this->updatedAt = $updatedAt;
     }
 
     /**
@@ -107,5 +142,111 @@ final class User extends Entity
     private function hashPassword(string $password): string
     {
         return password_hash($password, PASSWORD_ARGON2I);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getID(): ?string
+    {
+        return $this->ID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNickname(): string
+    {
+        return $this->nickname;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getUpdatedAt(): DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * get user password
+     *
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateID(int|string $ID): bool
+    {
+        if ($ID === null) {
+            $this->addError("invalid_id", "invalid id, cannot be blank", 1);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateEmail(string $email): bool
+    {
+        if (!\filter_var($email, \FILTER_VALIDATE_EMAIL)) {
+            $this->addError("invalid_email", "invalid email", 2);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validateNickname(string $nickname): bool
+    {
+        if (\strlen(\trim($nickname)) === 0) {
+            $this->addError("invalid_nickname", "invalid nickname, cannot be blank", 3);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validatePassword(string $password): bool
+    {
+        if (\strlen(\trim($password)) < 6) {
+            $this->addError(
+                "invalid_password",
+                "invalid password, should be greater than 6 characters",
+                3
+            );
+            return false;
+        }
+
+        return true;
     }
 }

@@ -3,11 +3,11 @@
 namespace Domain\UseCases\User;
 
 use Domain\Entities\EntityInterface;
-use Infrastructure\Repository\Repository;
+use Infrastructure\Repository\UserRepositoryInterface;
 
 interface UserManagerInterface
 {
-    public function __construct(Repository $repository);
+    public function __construct(UserRepositoryInterface $repository);
 
     public function getUser(int|string $ID): ?EntityInterface;
 

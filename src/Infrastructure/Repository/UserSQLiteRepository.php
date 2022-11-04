@@ -7,13 +7,14 @@ namespace Infrastructure\Repository;
 use Domain\Entities\EntityInterface;
 use Domain\Entities\User;
 
-final class UserInMemoryRepository implements UserRepositoryInterface
+final class UserSQLiteRepository implements UserRepositoryInterface
 {
     private \PDO $database;
 
-    public function __construct(\PDO $pdo)
+    public function __construct()
     {
-        $this->database = $pdo;
+        $this->database = new \PDO('sqlite:' . __DIR__ . '/../../../database/app.db');
+        $this->database->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     public function get(int|string $ID): ?EntityInterface
@@ -39,7 +40,7 @@ final class UserInMemoryRepository implements UserRepositoryInterface
         );
     }
 
-    public function find(array $filter): array
+    public function find(array $filter = []): array
     {
         $where = [];
         $binds = [];
@@ -47,8 +48,11 @@ final class UserInMemoryRepository implements UserRepositoryInterface
             $where[] = "$key = :$key";
             $binds[":$key"] = $value;
         }
-        $where = implode(' and ', $where);
-        $query = "SELECT id, email, nickname, password, created_at, updated_at FROM users WHERE $where";
+        $where = ' WHERE ' . implode(' and ', $where);
+        if (count($filter) === 0) {
+            $where = '';
+        }
+        $query = "SELECT id, email, nickname, password, created_at, updated_at FROM users $where";
         $stmt = $this->database->prepare($query);
         $stmt->execute($binds);
         $entities = $stmt->fetchAll(\PDO::FETCH_OBJ);

@@ -4,7 +4,7 @@ namespace Infrastructure\Repository;
 
 use Domain\Entities\EntityInterface;
 
-interface Writer
+interface WriterInterface
 {
     public function create(EntityInterface $entity): bool;
 

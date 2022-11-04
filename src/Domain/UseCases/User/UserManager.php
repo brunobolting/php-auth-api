@@ -6,16 +6,16 @@ namespace Domain\UseCases\User;
 
 use Domain\Entities\EntityInterface;
 use Domain\Entities\User;
-use Infrastructure\Repository\Repository;
+use Infrastructure\Repository\UserRepositoryInterface;
 
 class UserManager implements UserManagerInterface
 {
     /**
-     * @var Repository
+     * @var UserRepositoryInterface
      */
-    private Repository $repo;
+    private UserRepositoryInterface $repo;
 
-    public function __construct(Repository $repository)
+    public function __construct(UserRepositoryInterface $repository)
     {
         $this->repo = $repository;
     }
@@ -46,8 +46,14 @@ class UserManager implements UserManagerInterface
 
     public function updateUser(EntityInterface $entity): EntityInterface
     {
+        if ($entity->hasErrors()) {
+            return $entity;
+        }
+
+        $entity->setUpdatedAt(new \DateTimeImmutable());
+
         if (!$this->repo->update($entity)) {
-            $entity->addError('error_create', 'error to create user');
+            $entity->addError('error_update', 'error to update user');
         }
         return $entity;
     }

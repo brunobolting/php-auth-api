@@ -13,8 +13,8 @@ final class UserTest extends TestCase
     public function testIDShouldBeValid(): void
     {
         $user = new User(null, 'valid@email.com', 'nickname123', 'secure_password');
-        $this->assertNotNull($user->ID);
-        $this->assertTrue(Uuid::isValid($user->ID));
+        $this->assertNotNull($user->getID());
+        $this->assertTrue(Uuid::isValid($user->getID()));
     }
 
     public function testShouldBeHasErrorIfEmailIsInvalid(): void
@@ -22,8 +22,7 @@ final class UserTest extends TestCase
         $user = new User(null, 'invalid_email.com', 'nickname123', 'secure_password');
         $this->assertTrue($user->hasErrors());
         if ($user->hasErrors()) {
-            $handles = array_column($user->getErrors(), 'handle');
-            $this->assertContainsEquals('invalid_email', $handles);
+            $this->assertArrayHasKey('invalid_email', $user->getErrors());
         }
     }
 
@@ -33,8 +32,7 @@ final class UserTest extends TestCase
 
         $this->assertTrue($user->hasErrors());
         if ($user->hasErrors()) {
-            $handles = array_column($user->getErrors(), 'handle');
-            $this->assertContains('invalid_nickname', $handles);
+            $this->assertArrayHasKey('invalid_nickname', $user->getErrors());
         }
     }
 
@@ -44,8 +42,7 @@ final class UserTest extends TestCase
 
         $this->assertTrue($user->hasErrors());
         if ($user->hasErrors()) {
-            $handles = array_column($user->getErrors(), 'handle');
-            $this->assertContains('invalid_password', $handles);
+            $this->assertArrayHasKey('invalid_password', $user->getErrors());
         }
 
         $user2 = new User(null, 'test@email.com', 'nickname123', '123456');
@@ -58,15 +55,15 @@ final class UserTest extends TestCase
         $user = new User(null, 'test@email.com', 'nickname123', 'secure_password');
 
         $this->assertFalse($user->hasErrors());
-        $this->assertTrue(password_verify('secure_password', $user->password));
+        $this->assertTrue(password_verify('secure_password', $user->getPassword()));
     }
 
     public function testCreateNewUserShouldBeWork(): void
     {
         $user = new User(null, 'test@email.com', 'nickname123', 'secure_password');
-        $this->assertNotNull($user->ID);
-        $this->assertSame('test@email.com', $user->email);
-        $this->assertSame('nickname123', $user->nickname);
-        $this->assertTrue(password_verify('secure_password', $user->password));
+        $this->assertNotNull($user->getID());
+        $this->assertSame('test@email.com', $user->getEmail());
+        $this->assertSame('nickname123', $user->getNickname());
+        $this->assertTrue(password_verify('secure_password', $user->getPassword()));
     }
 }

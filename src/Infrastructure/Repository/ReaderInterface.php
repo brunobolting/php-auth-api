@@ -4,7 +4,7 @@ namespace Infrastructure\Repository;
 
 use Domain\Entities\EntityInterface;
 
-interface Reader
+interface ReaderInterface
 {
     public function get(int|string $ID): ?EntityInterface;
 
